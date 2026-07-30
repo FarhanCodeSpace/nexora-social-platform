@@ -1,5 +1,5 @@
 {
-  "name": "pulse-social-platform",
+  "name": "nexora-social-platform",
   "version": "1.0.0",
   "description": "CodeAlpha Full Stack Task 2 - Social Media Platform with Express.js and SQLite",
   "main": "server.js",

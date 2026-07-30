@@ -8,7 +8,7 @@ if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
 }
 
-const dbPath = path.join(dataDir, 'pulse_social.db');
+const dbPath = process.env.DB_PATH || (fs.existsSync(path.join(dataDir, 'pulse_social.db')) ? path.join(dataDir, 'pulse_social.db') : path.join(dataDir, 'nexora_social.db'));
 const db = new sqlite3.Database(dbPath);
 
 // Promisified database methods for modern async/await syntax

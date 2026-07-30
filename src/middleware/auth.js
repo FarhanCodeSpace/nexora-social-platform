@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'pulse_secret_key_super_secure_2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'nexora_secret_key_super_secure_2026';
 
 // Required Authentication Middleware
 function authenticateToken(req, res, next) {
