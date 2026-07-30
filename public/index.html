@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexora | Social Media Platform</title>
+  <meta name="description" content="Nexora is a modern social media platform for sharing posts, exploring trending topics, and connecting with the community.">
+  <!-- Custom Brand Favicon (Circle Nodes Network Symbol matching App Logo) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%230dd3c5'/><stop offset='55%25' stop-color='%237c3aed'/><stop offset='100%25' stop-color='%23f59e0b'/></linearGradient></defs><rect width='100' height='100' rx='28' fill='url(%23g)'/><line x1='30' y1='50' x2='70' y2='30' stroke='white' stroke-width='6' opacity='0.85'/><line x1='30' y1='50' x2='70' y2='70' stroke='white' stroke-width='6' opacity='0.85'/><line x1='70' y1='30' x2='70' y2='70' stroke='white' stroke-width='6' opacity='0.85'/><circle cx='30' cy='50' r='11' fill='white'/><circle cx='70' cy='30' r='9' fill='white'/><circle cx='70' cy='70' r='9' fill='white'/></svg>">
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <!-- App Header Navbar -->
+  <header class="app-header">
+    <div class="header-container">
+      <!-- Mobile Menu Hamburger Button -->
+      <button id="mobileMenuBtn" class="icon-btn mobile-menu-btn" title="Open Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <div class="brand-logo" id="brandLogo">
+        <div class="logo-icon">
+          <i class="fa-solid fa-circle-nodes"></i>
+        </div>
+        <span class="logo-text">Nexor<span class="logo-dot">a</span></span>
+      </div>
+
+      <!-- Mobile Expandable Search Toggle Button -->
+      <button id="mobileSearchToggleBtn" class="icon-btn mobile-search-toggle" title="Search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+
+      <!-- Search Bar -->
+      <div class="search-container" id="headerSearchContainer">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="searchInput" placeholder="Search posts, #tags, or @users..." autocomplete="off">
+        <button id="searchClearBtn" class="search-clear-btn hidden"><i class="fa-solid fa-xmark"></i></button>
+        <!-- Live Search Dropdown -->
+        <div id="searchDropdown" class="search-dropdown hidden">
+          <div id="searchDropdownContent">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Header Actions -->
+      <div class="header-actions">
+        <button id="themeToggleBtn" class="icon-btn" title="Toggle Theme">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+
+        <button id="headerNewPostBtn" class="btn btn-primary btn-sm header-post-btn">
+          <i class="fa-solid fa-pen-to-square"></i>
+          <span>Post</span>
+        </button>
+
+        <!-- User Profile Quick Dropdown / Login Button -->
+        <div id="headerAuthSection" class="header-auth">
+          <!-- Populated by JS: Logged-in Avatar or Login Button -->
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE SIDE DRAWER MENU -->
+  <div id="mobileDrawerOverlay" class="mobile-drawer-overlay hidden"></div>
+  <aside id="mobileDrawer" class="mobile-drawer">
+    <div class="drawer-header">
+      <div class="brand-logo">
+        <div class="logo-icon">
+          <i class="fa-solid fa-circle-nodes"></i>
+        </div>
+        <span class="logo-text">Nexor<span class="logo-dot">a</span></span>
+      </div>
+      <button id="closeMobileDrawerBtn" class="icon-btn-sm"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    
+    <div class="drawer-user-profile" id="drawerUserProfile">
+      <!-- Rendered dynamically by JS -->
+    </div>
+
+    <nav class="drawer-nav">
+      <a href="#" class="drawer-nav-item active" data-view="feed" data-feed="for_you">
+        <i class="fa-solid fa-house-chimney"></i>
+        <span>Home</span>
+      </a>
+      <a href="#" class="drawer-nav-item" data-view="feed" data-feed="following">
+        <i class="fa-solid fa-user-group"></i>
+        <span>Following</span>
+      </a>
+      <a href="#" class="drawer-nav-item" data-view="feed" data-feed="trending">
+        <i class="fa-solid fa-fire-flame-curved"></i>
+        <span>Trending</span>
+      </a>
+      <a href="#" class="drawer-nav-item" data-view="bookmarks" data-feed="bookmarked">
+        <i class="fa-solid fa-bookmark"></i>
+        <span>Bookmarks</span>
+      </a>
+      <a href="#" class="drawer-nav-item" id="drawerMyProfileLink">
+        <i class="fa-solid fa-user"></i>
+        <span>My Profile</span>
+      </a>
+    </nav>
+
+
+
+    <div class="drawer-footer">
+      <div class="status-indicator">
+        <span class="pulse-dot"></span>
+        <span>System Status: Operational</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Grid Layout -->
+  <div class="app-wrapper">
+    <div class="app-container">
+
+      <!-- LEFT SIDEBAR -->
+      <aside class="left-sidebar">
+        <nav class="nav-menu">
+          <a href="#" class="nav-item active" data-view="feed" data-feed="for_you">
+            <i class="fa-solid fa-house-chimney"></i>
+            <span>Home</span>
+          </a>
+          <a href="#" class="nav-item" data-view="feed" data-feed="following">
+            <i class="fa-solid fa-user-group"></i>
+            <span>Following</span>
+          </a>
+          <a href="#" class="nav-item" data-view="feed" data-feed="trending">
+            <i class="fa-solid fa-fire-flame-curved"></i>
+            <span>Trending</span>
+          </a>
+          <a href="#" class="nav-item" data-view="bookmarks" data-feed="bookmarked">
+            <i class="fa-solid fa-bookmark"></i>
+            <span>Bookmarks</span>
+          </a>
+          <a href="#" class="nav-item" id="navMyProfileLink">
+            <i class="fa-solid fa-user"></i>
+            <span>Profile</span>
+          </a>
+        </nav>
+
+        <!-- About Nexora Widget -->
+        <div class="sidebar-widget nexora-about-widget">
+          <div class="widget-header">
+            <i class="fa-solid fa-circle-nodes text-accent"></i>
+            <span>About Nexora</span>
+          </div>
+          <p class="widget-desc">A place to share ideas, connect with thinkers, and build the community you deserve.</p>
+          <div class="nexora-pillars">
+            <div class="nexora-pillar"><i class="fa-solid fa-pen-nib"></i> Create</div>
+            <div class="nexora-pillar"><i class="fa-solid fa-link"></i> Connect</div>
+            <div class="nexora-pillar"><i class="fa-solid fa-seedling"></i> Evolve</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT FEED -->
+      <main class="main-content">
+
+        <!-- Post Creator Box -->
+        <div class="post-composer-card" id="postComposerCard">
+          <div class="composer-header">
+            <img id="composerUserAvatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=guest" class="user-avatar" alt="Avatar">
+            <div class="composer-input-wrapper">
+              <textarea id="composerTextarea" placeholder="What's on your mind? Share an idea, spark a conversation..." rows="3"></textarea>
+              
+              <!-- Unified Media & Document Preview Container -->
+              <div id="composerMediaPreview" class="composer-media-preview-area hidden"></div>
+
+              <!-- Poll Creation Box -->
+              <div id="composerPollContainer" class="poll-creator-box hidden">
+                <div class="poll-header">
+                  <span>Create a Community Poll</span>
+                  <button type="button" id="closePollBtn" class="icon-btn-sm"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <input type="text" class="poll-option-input" placeholder="Option 1" required>
+                <input type="text" class="poll-option-input" placeholder="Option 2" required>
+                <input type="text" class="poll-option-input" placeholder="Option 3 (Optional)">
+                <input type="text" class="poll-option-input" placeholder="Option 4 (Optional)">
+              </div>
+            </div>
+          </div>
+
+          <div class="composer-toolbar">
+            <div class="toolbar-actions">
+              <label for="imageFileInput" class="toolbar-btn" title="Attach Photo">
+                <i class="fa-regular fa-image"></i>
+                <input type="file" id="imageFileInput" accept="image/*" class="hidden">
+              </label>
+              <label for="videoFileInput" class="toolbar-btn" title="Attach Video">
+                <i class="fa-solid fa-video"></i>
+                <input type="file" id="videoFileInput" accept="video/*" class="hidden">
+              </label>
+              <label for="documentFileInput" class="toolbar-btn" title="Attach Document">
+                <i class="fa-solid fa-file-arrow-up"></i>
+                <input type="file" id="documentFileInput" accept=".pdf,.doc,.docx,.txt,.zip,.csv,.ppt,.pptx,.xls,.xlsx" class="hidden">
+              </label>
+              <button id="togglePollBtn" class="toolbar-btn" title="Add Poll">
+                <i class="fa-solid fa-square-poll-vertical"></i>
+              </button>
+              <button id="insertTagBtn" class="toolbar-btn" title="Add Hashtag">
+                <i class="fa-solid fa-hashtag"></i>
+              </button>
+            </div>
+
+            <div class="composer-submit">
+              <span id="charCounter" class="char-counter">0 / 500</span>
+              <button id="publishPostBtn" class="btn btn-primary">
+                <span>Post</span>
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Profile Banner (Rendered when viewing a profile) -->
+        <div id="profileHeaderContainer" class="profile-header-container hidden">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Feed Controls & Filter Tabs -->
+        <div class="feed-tabs-container" id="feedTabsContainer">
+          <button class="feed-tab active" data-feed-type="for_you"><i class="fa-solid fa-house-chimney"></i> For You</button>
+          <button class="feed-tab" data-feed-type="following"><i class="fa-solid fa-user-group"></i> Following</button>
+          <button class="feed-tab" data-feed-type="trending"><i class="fa-solid fa-fire-flame-curved"></i> Trending</button>
+        </div>
+
+        <!-- Search Results Hero Banner (shown when search is active) -->
+        <div id="searchResultsHeader" class="search-results-header hidden">
+          <div class="search-results-meta">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <div>
+              <h3 id="searchResultsTitle">Search Results</h3>
+              <span id="searchResultsSubtitle" class="search-results-count"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Results Section (shown when search returns users) -->
+        <div id="searchUsersSection" class="search-users-section hidden">
+          <div class="search-section-label"><i class="fa-solid fa-users"></i> People</div>
+          <div id="searchUsersList" class="search-users-list"></div>
+        </div>
+
+        <!-- Posts List Feed Container -->
+        <div id="postsFeedContainer" class="posts-feed-container">
+          <!-- Posts rendered dynamically -->
+        </div>
+
+      </main>
+
+      <!-- RIGHT SIDEBAR -->
+      <aside class="right-sidebar">
+
+        <!-- Who to Follow Widget -->
+        <div class="sidebar-widget">
+          <div class="widget-header">
+            <h3>Who to follow</h3>
+          </div>
+          <div id="suggestedUsersList" class="suggested-users-list">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Trending Hashtags Widget -->
+        <div class="sidebar-widget">
+          <div class="widget-header">
+            <h3>Trending Topics</h3>
+          </div>
+          <div class="trending-list">
+            <div class="trending-item" data-tag="#nodejs">
+              <div class="tag-name">#nodejs</div>
+              <div class="tag-meta">3,420 posts</div>
+            </div>
+            <div class="trending-item" data-tag="#glassmorphism">
+              <div class="tag-name">#glassmorphism</div>
+              <div class="tag-meta">1,890 posts</div>
+            </div>
+            <div class="trending-item" data-tag="#cybersecurity">
+              <div class="tag-name">#cybersecurity</div>
+              <div class="tag-meta">1,240 posts</div>
+            </div>
+            <div class="trending-item" data-tag="#webdev">
+              <div class="tag-name">#webdev</div>
+              <div class="tag-meta">5,610 posts</div>
+            </div>
+            <div class="trending-item" data-tag="#artificialintelligence">
+              <div class="tag-name">#artificialintelligence</div>
+              <div class="tag-meta">4,110 posts</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Status Widget -->
+        <div class="sidebar-widget status-widget">
+          <div class="status-indicator">
+            <span class="pulse-dot"></span>
+            <span>System Status: Operational</span>
+          </div>
+          <p class="status-sub">Express.js backend &amp; SQLite database active</p>
+        </div>
+
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- AUTH MODAL -->
+  <div id="authModal" class="modal-overlay hidden">
+    <div class="modal-card auth-modal-card">
+      <button class="modal-close-btn" id="closeAuthModalBtn"><i class="fa-solid fa-xmark"></i></button>
+
+      <div class="auth-tabs">
+        <button id="authTabLogin" class="auth-tab active">Sign In</button>
+        <button id="authTabRegister" class="auth-tab">Create Account</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" class="auth-form">
+        <div class="form-group">
+          <label>Username or Email</label>
+          <input type="text" id="loginInput" placeholder="username or email" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="registerForm" class="auth-form hidden">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="regFullName" placeholder="Alex Rivera" required>
+        </div>
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="regUsername" placeholder="alex_dev" required>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="regEmail" placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="regPassword" placeholder="At least 6 characters" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- EDIT PROFILE MODAL -->
+  <div id="editProfileModal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Edit Profile</h3>
+        <button class="modal-close-btn" id="closeEditProfileBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="editProfileForm" class="modal-form">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="editFullName" required>
+        </div>
+        <div class="form-group">
+          <label>Bio</label>
+          <textarea id="editBio" rows="3" placeholder="Tell the world about yourself..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" id="editLocation" placeholder="San Francisco, CA">
+        </div>
+        <div class="form-group">
+          <label>Website</label>
+          <input type="url" id="editWebsite" placeholder="https://yourportfolio.com">
+        </div>
+        <div class="form-group">
+          <label>Avatar Image URL</label>
+          <input type="url" id="editAvatarUrl" placeholder="https://example.com/avatar.jpg">
+        </div>
+        <div class="form-group">
+          <label>Cover Image URL</label>
+          <input type="url" id="editCoverUrl" placeholder="https://example.com/cover.jpg">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelEditProfileBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- COMMENT MODAL / DRAWER -->
+  <div id="commentsModal" class="modal-overlay hidden">
+    <div class="modal-card comments-modal-card">
+      <div class="modal-header">
+        <h3>Comments</h3>
+        <button class="modal-close-btn" id="closeCommentsBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      
+      <!-- Original Target Post Snippet -->
+      <div id="commentsTargetPost" class="comments-target-post"></div>
+
+      <!-- Add Comment Form -->
+      <form id="addCommentForm" class="add-comment-form">
+        <input type="text" id="commentInput" placeholder="Write a thoughtful comment..." required autocomplete="off">
+        <button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-paper-plane"></i></button>
+      </form>
+
+      <!-- Comments List -->
+      <div id="commentsList" class="comments-list">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- IMAGE LIGHTBOX MODAL -->
+  <div id="imageLightboxModal" class="lightbox-overlay hidden">
+    <button class="lightbox-close-btn" id="closeLightboxBtn"><i class="fa-solid fa-xmark"></i></button>
+    <img id="lightboxImg" src="" alt="Enlarged media preview">
+  </div>
+
+  <!-- FIXED BOTTOM NAVIGATION BAR (Mobile < 768px) -->
+  <nav id="bottomNav" class="bottom-nav">
+    <a href="#" class="bottom-nav-item active" data-view="feed" data-feed="for_you" title="Home">
+      <i class="fa-solid fa-house-chimney"></i>
+      <span>Home</span>
+    </a>
+    <a href="#" class="bottom-nav-item" data-view="feed" data-feed="trending" title="Trending">
+      <i class="fa-solid fa-fire-flame-curved"></i>
+      <span>Trending</span>
+    </a>
+    <button id="bottomNavPostBtn" class="bottom-nav-compose-btn" title="Create Post">
+      <i class="fa-solid fa-plus"></i>
+    </button>
+    <a href="#" class="bottom-nav-item" data-view="bookmarks" data-feed="bookmarked" title="Bookmarks">
+      <i class="fa-solid fa-bookmark"></i>
+      <span>Bookmarks</span>
+    </a>
+    <a href="#" class="bottom-nav-item" id="bottomNavProfileLink" title="Profile">
+      <i class="fa-solid fa-user"></i>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <!-- MOBILE FLOATING ACTION BUTTON -->
+  <button id="mobileFabBtn" class="mobile-fab-btn" title="Create Post">
+    <i class="fa-solid fa-feather-pointed"></i>
+  </button>
+
+  <!-- MOBILE FULL-SCREEN CREATE POST MODAL (LinkedIn / Twitter style) -->
+  <div id="mobileComposeModal" class="mobile-compose-overlay hidden">
+    <div class="mobile-compose-container">
+      <div class="mobile-compose-header">
+        <button id="closeMobileComposeBtn" class="mobile-compose-cancel-btn">Cancel</button>
+        <h3 class="mobile-compose-title">Create Post</h3>
+        <button id="mobilePublishPostBtn" class="btn btn-primary btn-sm mobile-compose-post-btn">Post</button>
+      </div>
+
+      <div class="mobile-compose-body">
+        <div class="mobile-composer-user-info">
+          <img id="mobileComposerUserAvatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=guest" class="user-avatar" alt="Avatar">
+          <div class="mobile-composer-meta">
+            <span id="mobileComposerUserName" class="mobile-user-name">User Name</span>
+            <span class="audience-badge"><i class="fa-solid fa-earth-americas"></i> Anyone</span>
+          </div>
+        </div>
+
+        <textarea id="mobileComposerTextarea" placeholder="What do you want to talk about?" rows="6"></textarea>
+
+        <!-- Media / Document / Poll Preview Container -->
+        <div id="mobileComposerPreviewArea" class="composer-media-preview-area hidden"></div>
+      </div>
+
+      <div class="mobile-compose-footer">
+        <div class="mobile-compose-toolbar">
+          <label for="mobileImageFileInput" class="mobile-toolbar-icon" title="Add Photo">
+            <i class="fa-regular fa-image"></i>
+            <span>Photo</span>
+            <input type="file" id="mobileImageFileInput" accept="image/*" class="hidden">
+          </label>
+          <label for="mobileVideoFileInput" class="mobile-toolbar-icon" title="Add Video">
+            <i class="fa-solid fa-video"></i>
+            <span>Video</span>
+            <input type="file" id="mobileVideoFileInput" accept="video/*" class="hidden">
+          </label>
+          <label for="mobileDocumentFileInput" class="mobile-toolbar-icon" title="Add Document">
+            <i class="fa-solid fa-file-arrow-up"></i>
+            <span>Document</span>
+            <input type="file" id="mobileDocumentFileInput" accept=".pdf,.doc,.docx,.txt,.zip,.csv,.ppt,.pptx,.xls,.xlsx" class="hidden">
+          </label>
+          <button type="button" id="mobileTogglePollBtn" class="mobile-toolbar-icon" title="Add Poll">
+            <i class="fa-solid fa-square-poll-vertical"></i>
+            <span>Poll</span>
+          </button>
+          <button type="button" id="mobileInsertTagBtn" class="mobile-toolbar-icon" title="Add Hashtag">
+            <i class="fa-solid fa-hashtag"></i>
+            <span>Hashtag</span>
+          </button>
+        </div>
+        <div class="mobile-compose-footer-meta">
+          <span id="mobileCharCounter" class="char-counter">0 / 500</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Application Logic JS -->
+  <script src="/js/app.js"></script>
+</body>
+</html>
